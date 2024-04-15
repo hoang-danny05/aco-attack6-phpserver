@@ -28,9 +28,15 @@ ini_set('display_errors', 1);
 <?php
 if (isset($_GET["user"])){
 		$user = $_GET["user"];
-		$q = "Select * from users where username = '".$user."'";
+		//$q2 = "SELECT * FROM users where (username='".$username."') AND (password = '".md5($pass)."')" ;
+		//still vulnerable LOL
+		//$q = sprintf("Select * from users where username = '".$user."'";
+		$q = sprintf("Select * from users where username = '%s'",
+			mysqli_real_escape_string($con, $user)
+		);
 
 		if (mysqli_multi_query($con,$q))
+		//if ($statement->get_result())
 		{
 		  do
 			{
@@ -82,6 +88,14 @@ if (isset($_GET["user"])){
 				</td>
 				<td>
 					<?php echo $descr; ?>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Query:
+				</td>
+				<td>
+					<?php echo "PLACEHOLDER"; ?>
 				</td>
 			</tr>
 			</table>

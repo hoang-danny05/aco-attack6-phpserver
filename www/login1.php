@@ -64,7 +64,10 @@ if (!empty($_REQUEST['uid'])) {
 $username = ($_REQUEST['uid']);
 $pass = $_REQUEST['password'];
 
-$q = "SELECT * FROM users where username='".$username."' AND password = '".md5($pass)."'" ;
+$q = sprintf("SELECT * FROM users where username='%s' AND password = '%s';",
+	mysqli_real_escape_string($con, $username),
+	md5(mysqli_real_escape_string($con, $pass))
+);
 
 if (isset($_GET['debug']))
 {
@@ -115,7 +118,8 @@ if (mysqli_warning_count($con)) {
 	
 	}
 	else{
-		echo "<font style=\"color:#FF0000\">Invalid password!</font\>";
+		echo "<font style=\"color:#FF0000\">Invalid password!</font\><br />";
+		echo $q;
 	}
 }
 }
