@@ -69,6 +69,9 @@ $q = sprintf("SELECT * FROM users where username='%s' AND password = '%s';",
 	md5(mysqli_real_escape_string($con, $pass))
 );
 
+#$statement = mysqli_prepare($con, "SELECT * FROM users where username=? AND password = ?;");
+#mysqli_stmt_bind_param($statement, 's', $username);
+#mysqli_stmt_bind_param($statement, 's', md5($pass));
 if (isset($_GET['debug']))
 {
 	if ($_GET['debug']=="true")
@@ -78,7 +81,8 @@ if (isset($_GET['debug']))
 	}
 }
 
-		if (!mysqli_query($con,$q))
+#query here
+	if (!mysqli_query($con,$q))
 	{
 		echo 'Error: ' . mysqli_error($con);
 	}else{

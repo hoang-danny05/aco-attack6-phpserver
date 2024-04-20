@@ -31,30 +31,22 @@ if (isset($_GET["user"])){
 		//$q2 = "SELECT * FROM users where (username='".$username."') AND (password = '".md5($pass)."')" ;
 		//still vulnerable LOL
 		//$q = sprintf("Select * from users where username = '".$user."'";
-		$q = sprintf("Select * from users where username = '%s'",
+		$test = 1;
+		$q = sprintf("Select fname, username, description from users where username = '%s'",
 			mysqli_real_escape_string($con, $user)
 		);
+		mysqli_report(MYSQLI_REPORT_ALL ^ MYSQLI_REPORT_INDEX);
+		$stmt = mysqli_prepare($con, "SELECT fname, username, description FROM users WHERE username = ?");
 
-		if (mysqli_multi_query($con,$q))
-		//if ($statement->get_result())
-		{
-		  do
-			{
-			// Store first result set
-			if ($result=mysqli_store_result($con)) {
-			  // Fetch one and one row
-			  while ($row=mysqli_fetch_row($result))
-				{
-					$username = $row[1];
-					$name = $row[3];
-					$descr = $row[4];
-				}
-			  // Free result set
-			  mysqli_free_result($result);
-			  }
-			}
-		  while (mysqli_next_result($con));
+		
+		if ($stmt) {
+		    mysqli_stmt_bind_param($stmt, "s", $user);
+		    mysqli_stmt_execute($stmt);
+		    $stmt->bind_result($username, $name, $descr);
+		    mysqli_stmt_fetch($stmt);
 		}
+
+
 }//end if isset
 
 ?>		
@@ -95,7 +87,11 @@ if (isset($_GET["user"])){
 					Query:
 				</td>
 				<td>
-					<?php echo "PLACEHOLDER"; ?>
+					<?php echo $test; 
+					echo $fname;
+					echo $username;
+					echo $desc;
+?>
 				</td>
 			</tr>
 			</table>
